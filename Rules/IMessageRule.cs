@@ -4,5 +4,6 @@ namespace Larry.Messenger.Rules
         
         public bool DoesRuleApply();
         public string GetResponse();
+        
     }
 }

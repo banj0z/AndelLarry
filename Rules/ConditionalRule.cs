@@ -4,26 +4,26 @@ namespace Larry.Messenger.Rules
 {
     public class ConditionalRule : IMessageRule{
         
-        private readonly string _RequestMessage;
-        private readonly Func<string,bool> _Condition;
-        private readonly Func<string, bool> _RuleCondition;
-        private readonly string _TrueResponse;
-        private readonly string _FalseResponse;
+        private readonly string _requestMessage;
+        private readonly Func<string,bool> _condition;
+        private readonly Func<string, bool> _ruleCondition;
+        private readonly string _trueResponse;
+        private readonly string _falseResponse;
 
         public ConditionalRule(string requestMessage, Func<string,bool> ruleCondition, Func<string,bool> condition, string trueResponse = "Yes", string falseResponse = "No"){
-            _RequestMessage = requestMessage;
-            _Condition = condition;
-            _TrueResponse = trueResponse;
-            _FalseResponse = falseResponse;
-            _RuleCondition = ruleCondition;
+            _requestMessage = requestMessage ?? throw new ArgumentNullException(nameof(requestMessage));
+            _condition = condition ?? throw new ArgumentNullException(nameof(condition));
+            _trueResponse = trueResponse ?? throw new ArgumentNullException(nameof(trueResponse));
+            _falseResponse = falseResponse ?? throw new ArgumentNullException(nameof(falseResponse));
+            _ruleCondition = ruleCondition ?? throw new ArgumentNullException(nameof(ruleCondition));
         }
 
         public bool DoesRuleApply(){
-           return _RuleCondition(_RequestMessage);
+           return _ruleCondition(_requestMessage);
         }
 
         public string GetResponse(){
-            return _Condition(_RequestMessage) ? _TrueResponse : _FalseResponse;
+            return _condition(_requestMessage) ? _trueResponse : _falseResponse;
         }
     }
 }

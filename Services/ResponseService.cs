@@ -7,26 +7,21 @@ namespace Larry.Messenger.Services
 {
     public class ResponseService : IResponseService{
 
-        private readonly RulesService _RulesService;
+        private readonly RuleFactory _rulesFactory;
         private readonly ILogger _logger;
 
         public ResponseService(ILogger logger){
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             //TODO: consider using dependency injection
-            _RulesService = new RulesService(logger);
-            _logger = logger;
-        }
-        
-        public string GetResponse(){
-            return "Busy right now, can't talk";
+            _rulesFactory = new RuleFactory(logger);
         }
 
         public string GetResponse(string requestMessage){
             _logger.LogInformation("Getting rules");
-            var rules = _RulesService.GetRules();
+            var rules = _rulesFactory.GetRules();
             _logger.LogInformation($"Configured {rules.Length} rules.");
             
             foreach(var rule in rules){
-                _logger.LogInformation($"Applying message {requestMessage} to rule");
                 var msgSpecificRule = rule(requestMessage);
                 if(msgSpecificRule.DoesRuleApply()){
                     return msgSpecificRule.GetResponse();
